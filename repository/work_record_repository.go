@@ -2,7 +2,7 @@ package repository
 
 import (
 	"leaving-work-api/model"
-	"leaving-work-api/mock"
+	"leaving-work-api/db"
 )
 
 type WorkRecordRepository interface {
@@ -16,5 +16,7 @@ func NewWorkRecordRepository() WorkRecordRepository {
 }
 
 func (r *workRecordRepository) FindByUserID(userID string) []model.WorkRecord {
-	return mock.GetMockWorkRecords(userID)
+	var records []model.WorkRecord
+	db.DB.Where("user_id = ?", userID).Find(&records)
+	return records
 }

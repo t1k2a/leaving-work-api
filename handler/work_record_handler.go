@@ -36,3 +36,31 @@ func (h *WorkRecordHandler) GetWorkRecords(w http.ResponseWriter, r *http.Reques
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(records)
 }
+
+func (h *WorkRecordHandler) CreateWorkRecord(w http.ResponseWriter, r *http.Request) {
+	var req model.CreateWorkRecordRequest
+
+	// jsonを構造体にデコード
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+		return
+	}
+
+	// バリデーション
+	if err := h.validator.Struct(req); err != nil {
+		http.Error(w, "User not registered", http.StatusBadRequest)
+		return
+	}
+
+	// 保存処理
+	record, err := h.service.CreateWorkRecord(req.UserID, req.ClockOutTime)
+	if err != nil {
+		http.Error(w, "Failed to create work record", http.StatusInternalServerError)
+		return
+	}
+
+	// 成功レスポンス
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(record)
+}

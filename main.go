@@ -8,6 +8,7 @@ import (
 	"leaving-work-api/handler"
 	"leaving-work-api/repository"
 	"leaving-work-api/service"
+	"leaving-work-api/db"
 )
 
 type WorkRecord struct {
@@ -17,14 +18,17 @@ type WorkRecord struct {
 }
 
 func main() {
+	db.Init()
 	r := chi.NewRouter()
 
 	// DI(依存注入)
 	repo := repository.NewWorkRecordRepository()
 	svc := service.NewWorkRecordService(repo)
 	h := handler.NewWorkRecordHandler(svc)
-	r.Get("/work_records", h.GetWorkRecords)
 
+	r.Get("/work_records", h.GetWorkRecords)
+	r.Post("/work_records", h.CreateWorkRecord)
+	
 	log.Println("Server running on :8080")
 	http.ListenAndServe(":8080", r)
 }
