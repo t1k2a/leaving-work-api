@@ -7,6 +7,8 @@ import (
 
 type WorkRecordService interface {
 	GetRecordsByUserID(userID string) []model.WorkRecord
+	UserExists(userID string) bool
+	CreateWorkRecord(userId, clockOutTime string) (*model.WorkRecord, error)
 }
 
 type workRecordService struct {
@@ -30,4 +32,12 @@ func NewWorkRecordService(repo repository.WorkRecordRepository) WorkRecordServic
 // 「使う」ための関数
 func (s *workRecordService) GetRecordsByUserID(userID string) []model.WorkRecord {
 	return s.repo.FindByUserID(userID)
+}
+
+func (s *workRecordService) UserExists(userID string) bool {
+	return s.repo.UserExists(userID)
+}
+
+func (s *workRecordService) CreateWorkRecord(userId, clockOutTime string) (*model.WorkRecord, error) {
+	return s.repo.CreateWorkRecord(userId, clockOutTime)
 }
