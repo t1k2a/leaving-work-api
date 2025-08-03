@@ -1,5 +1,5 @@
 # ベースイメージ
-FROM golang:1.21-alpine
+FROM golang:1.24.3-alpine
 
 # 作業ディレクトリを作成
 WORKDIR /app
