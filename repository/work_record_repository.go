@@ -19,7 +19,7 @@ func NewWorkRecordRepository() WorkRecordRepository {
 
 func (r *workRecordRepository) FindByUserID(userID string) []model.WorkRecord {
 	var records []model.WorkRecord
-	db.DB.Where("id = ?", userID).Find(&records)
+	db.DB.Where("user_id = ?", userID).Find(&records)
 	return records
 }
 
